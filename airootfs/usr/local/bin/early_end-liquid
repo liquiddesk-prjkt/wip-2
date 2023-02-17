@@ -1,0 +1,26 @@
+echo
+echo "########################"
+echo "# Initialising System..."
+echo "########################"
+
+chmod 750 /etc/sudoers.d
+chmod 750 /etc/polkit-1/rules.d
+chgrp polkitd /etc/polkit-1/rules.d
+
+pacman-key --init
+pacman-key --refresh-keys
+
+#rm -f /etc/sudoers.d/g_wheel
+#rm -f /etc/polkit-1/rules.d/49-nopasswd_global.rules
+rm /root/{.automated_script.sh,.zlogin}
+mv /etc/liquid-release /etc/lsb-release
+
+systemctl enable pacman-init.service choose-mirror.service
+systemctl enable NetworkManager sshd
+systemctl enable ntpd bluetooth org.cups.cupsd
+systemctl set-default graphical.target
+
+rm -f /etc/systemd/system/multi-user.target.wants/pacman-init.service
+rm -f /etc/systemd/system/etc-pacman.d-gnupg.mount
+
+rm /usr/local/bin/early_end-liquid
